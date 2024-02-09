@@ -4,7 +4,7 @@ import TaskCard from "./taskcard";
 const Column = (props) => {
   const {
     column,
-    items,
+    cards,
     onDragStart,
     onDragEnter,
     onDragLeave,
@@ -56,7 +56,7 @@ const Column = (props) => {
       <div className="header">
         <h3>{name}</h3>
       </div>
-      {items.map((card) => (
+      {cards.map((card) => (
         <TaskCard
           key={card.id}
           card={card}

@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import TaskCard from "./taskcard";
 import Column from "./column";
 import { Button } from "react-bootstrap";
+import { useBoard } from "../provider/useboard";
 
 /*
 Database
@@ -39,74 +40,11 @@ const KanbanBoard = (props) => {
   const [overItem, setOverItem] = useState();
   const [dragCard, setDragCard] = useState();
 
-  const [columns, setColumns] = useState([
-    { id: 10, name: "To Do", backgroundcolor: "lightgrey", color: "black" },
-    { id: 20, name: "Next up" },
-    { id: 30, name: "In Progress" },
-    { id: 40, name: "Ready to Release" },
-    { id: 50, name: "Done" },
-  ]);
-
-  const [items, setItems] = useState([
-    {
-      id: 1,
-      name: "Create Change Password Screen",
-      col: 10,
-      prefix: "Web",
-      priority: 1,
-      backgroundcolor: "lightblue",
-      color: "black",
-      parent: { id: 100, name: "Administration", bg: "green", color: "black" },
-    },
-    { id: 2, name: "Card 2", col: 10, prefix: "Web" },
-    {
-      id: 3,
-      name: "Card 3",
-      col: 10,
-      prefix: "Web",
-      priority: 2,
-      backgroundcolor: "lightgreen",
-      color: "red",
-    },
-    { id: 4, name: "Card 4", col: 10, prefix: "MBL", priority: 3 },
-  ]);
+  const { columns, cards, setCards, changeCardOrder, moveCardToColumn, addCard } = useBoard();
 
   useEffect(() => {
-    console.log("Card Changed", items);
-  }, [items]);
-
-  const moveCardToColumn = (card, column) => {
-    console.log("Moving card", card, "to column", column);
-    setItems(
-      items.map((item) => {
-        if (item.id === card.id) {
-          console.log("Moving ", item, { ...item, col: column.id });
-          item.col = column.id;
-          return { ...item, col: column.id };
-        }
-        return item;
-      })
-    );
-  };
-
-  const changeCardOrder = (card1, card2) => {
-    setItems((prevItems) => {
-      // Find the indexes of the cards
-      const index1 = prevItems.findIndex((item) => item.id === card1.id);
-      const index2 = prevItems.findIndex((item) => item.id === card2.id);
-
-      // Make a new copy of the array
-      const newItems = [...prevItems];
-
-      // Remove card1 from its old position
-      const [removed] = newItems.splice(index1, 1);
-
-      // Insert card1 before card2
-      newItems.splice(index2 > index1 ? index2 - 1 : index2, 0, removed);
-
-      return newItems;
-    });
-  };
+    console.log("Card Changed", cards);
+  }, [cards]);
 
   const dragStart = (e, card) => {
     console.log("Drag Start", e.target, card);
@@ -192,7 +130,7 @@ const KanbanBoard = (props) => {
           return (
             <Column
               column={column}
-              items={items.filter((card) => card.col === column.id)}
+              cards={cards.filter((card) => card.col === column.id)}
               onDragStart={(e, card) => dragStart(e, card)}
               onDragEnter={dragEnter}
               onDragLeave={dragLeave}
@@ -206,7 +144,7 @@ const KanbanBoard = (props) => {
       </div>
 
       <Button onClick={() => {
-        setItems([...items, { id: items.length + 1, name: "New Card", col: 10 }])
+        addCard();
       }}>Add</Button>
     </div>
   );

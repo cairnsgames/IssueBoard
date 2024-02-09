@@ -1,7 +1,8 @@
 import React from "react";
 import { Button, Card, Dropdown, Row, Col, Badge } from "react-bootstrap";
-import { Bag, Hash, Icon1CircleFill, ThreeDots } from "react-bootstrap-icons";
+import { Bag, ChevronRight, Hash, Icon1CircleFill, ThreeDots } from "react-bootstrap-icons";
 import Priority from "./priority";
+import { useBoard } from "../provider/useboard";
 
 const TaskCard = (props) => {
   const {
@@ -14,6 +15,8 @@ const TaskCard = (props) => {
     onDrop,
   } = props;
   const { id, name, col } = card;
+
+  const { updateCard } = useBoard();
 
   const dragStart = (e) => {
     // e.dataTransfer.setData("card", JSON.stringify(card));
@@ -39,6 +42,10 @@ const TaskCard = (props) => {
   const drop = (e) => {
     onDrop(e);
   };
+
+  const setPriority = (level) => {
+    updateCard(card.id, { ...card, priority: level });
+  }
 
   return (
     <Card
@@ -76,6 +83,28 @@ const TaskCard = (props) => {
                 <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
                 <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+
+                <Dropdown.Divider />
+                <Dropdown>
+                  <Dropdown.Toggle
+                    variant="light"
+                    align={"end"}
+                    style={{
+                      backgroundColor: "rgb(0,0,0,0)",
+                      borderColor: "rgb(0,0,0,0)",
+                    }}
+                  >
+                    Priority <div style={{float: "right"}}><ChevronRight /></div>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={()=>setPriority(1)}>Priority 1</Dropdown.Item>
+                    <Dropdown.Item onClick={()=>setPriority(2)}>Priority 2</Dropdown.Item>
+                    <Dropdown.Item onClick={()=>setPriority(3)}>Priority 3</Dropdown.Item>
+                    <Dropdown.Item onClick={()=>setPriority(4)}>Priority 4</Dropdown.Item>
+                    <Dropdown.Item onClick={()=>setPriority(5)}>Priority 5</Dropdown.Item>
+                    <Dropdown.Item onClick={()=>setPriority(6)}>Priority 6</Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               </Dropdown.Menu>
             </Dropdown>
           </Col>
@@ -83,13 +112,26 @@ const TaskCard = (props) => {
       </Card.Header>
       <Card.Body>
         {card?.parent && (
-          <Badge bg="" style={{ backgroundColor: card.parent.bg ?? "black", color: card.parent.color ?? "white" }}>
+          <Badge
+            bg=""
+            style={{
+              backgroundColor: card.parent.bg ?? "black",
+              color: card.parent.color ?? "white",
+            }}
+          >
             {card.parent.name}
           </Badge>
         )}
       </Card.Body>
       <Card.Footer>
-        <span style={{ fontSize: "12px", border: "1px solid lightgrey", paddingRight:"5px", borderRadius: "4px" }}>
+        <span
+          style={{
+            fontSize: "12px",
+            border: "1px solid lightgrey",
+            paddingRight: "5px",
+            borderRadius: "4px",
+          }}
+        >
           <Hash /> {card.prefix}-{card.id}
         </span>
         <Priority level={card.priority} />
