@@ -1,0 +1,57 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+$primary: rgb(228, 0, 228);
+$secondary: rgb(228, 0, 128);
+
+@import "~bootstrap/scss/bootstrap";
+
+.kbboard {
+  width: 100%;
+  display: grid;
+}
+
+@media (min-width: 62em) {
+  .kbboard {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+}
+
+
+.kbcolumn {
+  background-color: DodgerBlue;
+  color: white;
+  margin: 5px;
+  .header {
+    margin-top: 1rem;
+    text-align: center;
+    line-height: 75px;
+    font-size: 30px;
+  }
+}
+
+.kbcardZZZZ {
+  border: 1px solid black;
+  background-color: purple;
+  font-size: 16px;
+}
+
+.dragging {
+  background-color: green;
+  opacity: 0.5;
+}
+
+.card {
+  border-color: none;
+  .card-header,
+  .card-body,
+  .card-footer {
+    padding: 2px 4px;
+    border: none;
+  }
+  .dropdown-toggle::after {
+    display: none;
+  }
+}
