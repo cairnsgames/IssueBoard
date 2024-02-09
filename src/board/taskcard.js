@@ -90,11 +90,13 @@ const TaskCard = (props) => {
                     variant="light"
                     align={"end"}
                     style={{
-                      backgroundColor: "rgb(0,0,0,0)",
-                      borderColor: "rgb(0,0,0,0)",
+                      width: "100%",
+                      textAlign: "left",
                     }}
                   >
-                    Priority <div style={{float: "right"}}><ChevronRight /></div>
+                    <div>
+                    Priority <ChevronRight className="mt-1" style={{float: "right"}}/>
+                    </div>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
                     <Dropdown.Item onClick={()=>setPriority(1)}>Priority 1</Dropdown.Item>
