@@ -11,7 +11,6 @@ const App = () => (
   <BoardProvider>
     <Container fluid>
       <NavBar />
-      <Button variant="secondary">Primary</Button>
       <KanbanBoard title="Board" />
     </Container>
   </BoardProvider>

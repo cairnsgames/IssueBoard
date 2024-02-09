@@ -7,7 +7,12 @@ $secondary: rgb(228, 0, 128);
 
 @import "~bootstrap/scss/bootstrap";
 
+.kbcontainer {
+  min-height: 80vh;
+}
 .kbboard {
+  min-height: 80vh;
+  height: 100%;
   width: 100%;
   display: grid;
 }
@@ -22,13 +27,14 @@ $secondary: rgb(228, 0, 128);
 
 .kbcolumn {
   background-color: DodgerBlue;
+  height: 100%;
   color: white;
   margin: 5px;
   .header {
-    margin-top: 1rem;
+    margin-top: 8px;
     text-align: center;
-    line-height: 75px;
-    font-size: 30px;
+    font-size: 20px;
+    font-weight: 750;
   }
 }
 

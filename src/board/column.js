@@ -1,5 +1,7 @@
 import React from "react";
 import TaskCard from "./taskcard";
+import { Row, Col, Button } from "react-bootstrap";
+import { Plus } from "react-bootstrap-icons";
 
 const Column = (props) => {
   const {
@@ -51,11 +53,21 @@ const Column = (props) => {
       onDragOver={(e) => dragOver(e, column)}
       onDrop={drop}
       data-target={column.id}
-      style={{ backgroundColor: column.backgroundcolor ?? "", color: column.color ?? ""}}
+      style={{
+        backgroundColor: column.backgroundcolor ?? "",
+        color: column.color ?? "",
+      }}
     >
-      <div className="header">
-        <h3>{name}</h3>
-      </div>
+        <Row className="header">
+          <Col style={{margin:"0px",padding:"0px",marginLeft:"10px"}}>
+            <h3>{name}</h3>
+          </Col>
+          <Col xs={3} md={3} style={{margin:"0px",padding:"0px",marginRight:"10px"}}>
+            <Button size="sm" variant="">
+              <Plus />
+            </Button>
+          </Col>
+        </Row>
       {cards.map((card) => (
         <TaskCard
           key={card.id}

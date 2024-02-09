@@ -124,7 +124,7 @@ const KanbanBoard = (props) => {
   };
 
   return (
-    <div>
+    <div className="kbcontainer">
       <div className="kbboard">
         {columns.map((column) => {
           return (
