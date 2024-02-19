@@ -6,7 +6,7 @@ import { Plus } from "react-bootstrap-icons";
 const Column = (props) => {
   const {
     column,
-    cards,
+    cards, epics,
     onDragStart,
     onDragEnter,
     onDragLeave,
@@ -14,38 +14,60 @@ const Column = (props) => {
     onDragEnd,
     onDrop,
     onDropOnCard,
+    onEditCard
   } = props;
   const { id, name } = column;
 
   const dragStart = (e, card) => {
-    onDragStart(e, card);
+    if (onDragStart) {
+      onDragStart(e, card);
+    }
   };
 
   const dragOver = (e, item) => {
-    onDragOver(e, item);
+    if (onDragOver) {
+      onDragOver(e, item);
+    }
   };
 
   const dragEnd = (e) => {
-    onDragEnd(e);
+    if (onDragEnd) {
+      onDragEnd(e);
+    }
   };
 
   const dragEnter = (e) => {
-    onDragEnter(e);
+    if (onDragEnter) {
+      onDragEnter(e);
+    }
   };
 
   const dragLeave = (e) => {
-    onDragLeave(e);
+    if (onDragLeave) {
+      onDragLeave(e);
+    }
   };
 
   const drop = (e) => {
-    onDrop(e);
+    if (onDrop) {
+      onDrop(e);
+    }
   };
   const dropOnCard = (e) => {
-    onDropOnCard(e);
+    if (onDropOnCard) {
+      onDropOnCard(e);
+    }
+  };
+
+  const editCard = (e, card) => {
+    if (onEditCard) {
+      onEditCard(e, card);
+    }
   };
 
   return (
     <div
+      key={column.id}
       id={column.id}
       className="kbcolumn"
       onDragEnter={dragEnter}
@@ -58,20 +80,25 @@ const Column = (props) => {
         color: column.color ?? "",
       }}
     >
-        <Row className="header">
-          <Col style={{margin:"0px",padding:"0px",marginLeft:"10px"}}>
-            <h3>{name}</h3>
-          </Col>
-          <Col xs={3} md={3} style={{margin:"0px",padding:"0px",marginRight:"10px"}}>
-            <Button size="sm" variant="">
-              <Plus />
-            </Button>
-          </Col>
-        </Row>
+      <Row className="header">
+        <Col style={{ margin: "0px", padding: "0px", marginLeft: "10px" }}>
+          <h3>{name}</h3>
+        </Col>
+        <Col
+          xs={3}
+          md={3}
+          style={{ margin: "0px", padding: "0px", marginRight: "10px" }}
+        >
+          <Button size="sm" variant="">
+            <Plus />
+          </Button>
+        </Col>
+      </Row>
       {cards.map((card) => (
         <TaskCard
           key={card.id}
           card={card}
+          epic={epics.find((epic) => epic.id == card.parent)}
           className="kbcard m-2"
           draggable
           onDragStart={(e) => dragStart(e, card)}
@@ -80,6 +107,7 @@ const Column = (props) => {
           onDragLeave={dragLeave}
           onDragOver={(e) => dragOver(e, card)}
           onDrop={dropOnCard}
+          onEditCard={editCard}
         />
       ))}
     </div>

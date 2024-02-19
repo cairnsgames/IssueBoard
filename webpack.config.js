@@ -22,7 +22,7 @@ module.exports = (env) => {
     // target identifies which .env file to use
 
     output: {
-      publicPath: "http://localhost:3000/",
+      publicPath: "http://localhost:3777/",
     },
 
     resolve: {
@@ -30,7 +30,7 @@ module.exports = (env) => {
     },
 
     devServer: {
-      port: 3000,
+      port: 3777,
       historyApiFallback: true,
     },
 

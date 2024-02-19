@@ -3,6 +3,7 @@ import TaskCard from "./taskcard";
 import Column from "./column";
 import { Button } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
+import EditTask from "./edittask";
 
 /*
 Database
@@ -34,13 +35,22 @@ dragOverItem - Column/Card being dragged over
 */
 
 const KanbanBoard = (props) => {
+  console.log("Display Board");
   const dragItem = useRef();
   const dragOverItem = useRef();
 
   const [overItem, setOverItem] = useState();
   const [dragCard, setDragCard] = useState();
 
-  const { columns, cards, setCards, changeCardOrder, moveCardToColumn, addCard } = useBoard();
+  const {
+    columns,
+    cards, epics,
+    setCards,
+    changeCardOrder,
+    moveCardToColumn,
+    addCard, updateCard,
+    activeCard, setActiveCard
+  } = useBoard();
 
   useEffect(() => {
     console.log("Card Changed", cards);
@@ -122,6 +132,9 @@ const KanbanBoard = (props) => {
       dragOverItem.current = null;
     }, 0);
   };
+  const editCard = (e, card) => {
+    setActiveCard(card);
+  }
 
   return (
     <div className="kbcontainer">
@@ -129,8 +142,10 @@ const KanbanBoard = (props) => {
         {columns.map((column) => {
           return (
             <Column
+              key={column.id}
               column={column}
               cards={cards.filter((card) => card.col === column.id)}
+              epics={epics}
               onDragStart={(e, card) => dragStart(e, card)}
               onDragEnter={dragEnter}
               onDragLeave={dragLeave}
@@ -138,14 +153,22 @@ const KanbanBoard = (props) => {
               onDrop={dropOnColumn}
               onDropOnCard={dropOnCard}
               onDragEnd={dragEnd}
+              onEditCard={editCard}
             />
           );
         })}
       </div>
 
-      <Button onClick={() => {
-        addCard();
-      }}>Add</Button>
+      <Button
+        onClick={() => {
+          const newCard = addCard();
+          setActiveCard(newCard);
+        }}
+      >
+        Add
+      </Button>
+
+      {activeCard && <EditTask card={activeCard} close={()=>setActiveCard()} setCard={setActiveCard} saveCard={updateCard} />}
     </div>
   );
 };

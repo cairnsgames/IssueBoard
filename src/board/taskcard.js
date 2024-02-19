@@ -1,51 +1,86 @@
 import React from "react";
 import { Button, Card, Dropdown, Row, Col, Badge } from "react-bootstrap";
-import { Bag, ChevronRight, Hash, Icon1CircleFill, ThreeDots } from "react-bootstrap-icons";
+import {
+  Bag,
+  Bug,
+  ChevronRight,
+  Hash,
+  Icon1CircleFill,
+  Journal,
+  JournalBookmarkFill,
+  Stickies,
+  ThreeDots,
+} from "react-bootstrap-icons";
 import Priority from "./priority";
 import { useBoard } from "../provider/useboard";
+import { IssueIcon } from "./utils";
+
 
 const TaskCard = (props) => {
   const {
     card,
+    epic,
     onDragStart,
     onDragEnter,
     onDragLeave,
     onDragOver,
     onDragEnd,
     onDrop,
+    onEditCard,
   } = props;
   const { id, name, col } = card;
+
+  console.log("Card Epic", card.id, epic?.id, card.parent)
 
   const { updateCard } = useBoard();
 
   const dragStart = (e) => {
     // e.dataTransfer.setData("card", JSON.stringify(card));
-    onDragStart(e, card);
+    if (onDragStart) {
+      onDragStart(e, card);
+    }
   };
 
   const dragOver = (e) => {
-    onDragOver(e, card);
+    if (onDragOver) {
+      onDragOver(e, card);
+    }
   };
 
   const dragEnd = (e) => {
-    onDragEnd(e);
+    if (onDragEnd) {
+      onDragEnd(e);
+    }
   };
 
   const dragEnter = (e) => {
-    onDragEnter(e);
+    if (onDragEnter) {
+      onDragEnter(e);
+    }
   };
 
   const dragLeave = (e) => {
-    onDragLeave(e);
+    if (onDragLeave) {
+      onDragLeave(e);
+    }
   };
 
   const drop = (e) => {
-    onDrop(e);
+    if (onDrop) {
+      onDrop(e);
+    }
+  };
+
+  const editCard = (e) => {
+    console.log("Double click", card);
+    if (onEditCard) {
+      onEditCard(e, card);
+    }
   };
 
   const setPriority = (level) => {
     updateCard(card.id, { ...card, priority: level });
-  }
+  };
 
   return (
     <Card
@@ -58,6 +93,7 @@ const TaskCard = (props) => {
       onDragLeave={dragLeave}
       onDragOver={dragOver}
       onDrop={drop}
+      onDoubleClick={editCard}
       style={{
         backgroundColor: card.backgroundcolor ?? "white",
         color: card.color ?? "black",
@@ -65,7 +101,9 @@ const TaskCard = (props) => {
     >
       <Card.Header>
         <Row>
-          <Col>{card.name}</Col>
+          <Col>
+            <IssueIcon type={card.type} size="14" /> {card.name}
+          </Col>
           <Col xs={1}>
             <Dropdown style={{ float: "right" }} align={"end"}>
               <Dropdown.Toggle
@@ -76,13 +114,13 @@ const TaskCard = (props) => {
                   borderColor: "rgb(0,0,0,0)",
                 }}
               >
-                <ThreeDots />
+                <ThreeDots color={card.color ?? "black"} />
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                <Dropdown.Item href="#/action-1" onClick={editCard}>Edit</Dropdown.Item>
+                <Dropdown.Item href="#/action-2">Something...</Dropdown.Item>
+                <Dropdown.Item href="#/action-3">Close</Dropdown.Item>
 
                 <Dropdown.Divider />
                 <Dropdown>
@@ -95,16 +133,32 @@ const TaskCard = (props) => {
                     }}
                   >
                     <div>
-                    Priority <ChevronRight className="mt-1" style={{float: "right"}}/>
+                      Priority{" "}
+                      <ChevronRight
+                        className="mt-1"
+                        style={{ float: "right" }}
+                      />
                     </div>
                   </Dropdown.Toggle>
                   <Dropdown.Menu>
-                    <Dropdown.Item onClick={()=>setPriority(1)}>Priority 1</Dropdown.Item>
-                    <Dropdown.Item onClick={()=>setPriority(2)}>Priority 2</Dropdown.Item>
-                    <Dropdown.Item onClick={()=>setPriority(3)}>Priority 3</Dropdown.Item>
-                    <Dropdown.Item onClick={()=>setPriority(4)}>Priority 4</Dropdown.Item>
-                    <Dropdown.Item onClick={()=>setPriority(5)}>Priority 5</Dropdown.Item>
-                    <Dropdown.Item onClick={()=>setPriority(6)}>Priority 6</Dropdown.Item>
+                    <Dropdown.Item onClick={() => setPriority(1)}>
+                      Priority 1
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setPriority(2)}>
+                      Priority 2
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setPriority(3)}>
+                      Priority 3
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setPriority(4)}>
+                      Priority 4
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setPriority(5)}>
+                      Priority 5
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => setPriority(6)}>
+                      Priority 6
+                    </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
               </Dropdown.Menu>
@@ -113,15 +167,15 @@ const TaskCard = (props) => {
         </Row>
       </Card.Header>
       <Card.Body>
-        {card?.parent && (
+        {epic && (
           <Badge
             bg=""
             style={{
-              backgroundColor: card.parent.bg ?? "black",
-              color: card.parent.color ?? "white",
+              backgroundColor: epic.backgroundcolor ?? "black",
+              color: epic.color ?? "white",
             }}
           >
-            {card.parent.name}
+            {epic.name}
           </Badge>
         )}
       </Card.Body>
