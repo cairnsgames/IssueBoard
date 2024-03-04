@@ -10,6 +10,7 @@ export const useBoard = () => {
     throw new Error("useBoard was used outside of its Provider");
   }
   const {
+    board, setBoard,
     columns,
     cards, epics,
     setCards,
@@ -18,12 +19,11 @@ export const useBoard = () => {
     addCard,
     updateCard,
     activeCard,
-    setActiveCard,
+    setActiveCard, activeEpic, setActiveEpic,
   } = context;
 
-  console.log("useBoard EPICS", epics);
-
   return {
+    board, setBoard,
     columns,
     cards, epics,
     setCards,
@@ -32,6 +32,6 @@ export const useBoard = () => {
     addCard,
     updateCard,
     activeCard,
-    setActiveCard,
+    setActiveCard, activeEpic, setActiveEpic,
   };
 };

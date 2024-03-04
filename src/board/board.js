@@ -4,6 +4,7 @@ import Column from "./column";
 import { Button } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
 import EditTask from "./edittask";
+import BoardHeader from "./boardheader";
 
 /*
 Database
@@ -35,7 +36,6 @@ dragOverItem - Column/Card being dragged over
 */
 
 const KanbanBoard = (props) => {
-  console.log("Display Board");
   const dragItem = useRef();
   const dragOverItem = useRef();
 
@@ -43,6 +43,7 @@ const KanbanBoard = (props) => {
   const [dragCard, setDragCard] = useState();
 
   const {
+    board,
     columns,
     cards, epics,
     setCards,
@@ -52,12 +53,7 @@ const KanbanBoard = (props) => {
     activeCard, setActiveCard
   } = useBoard();
 
-  useEffect(() => {
-    console.log("Card Changed", cards);
-  }, [cards]);
-
   const dragStart = (e, card) => {
-    console.log("Drag Start", e.target, card);
     dragItem.current = e.target;
     setDragCard(card);
     setTimeout(() => {
@@ -66,10 +62,8 @@ const KanbanBoard = (props) => {
   };
   const dragEnter = (e) => {
     if (dragOverItem.current && dragOverItem.current !== e.target) {
-      console.log("Drag Exists", dragOverItem.current, e.target);
       dragOverItem.current.classList.toggle("dragging");
     }
-    console.log("Drag Enter", e.target, dragOverItem.current);
     dragOverItem.current = e.target;
     dragOverItem.current.classList.toggle("dragging");
     e.preventDefault();
@@ -77,7 +71,6 @@ const KanbanBoard = (props) => {
   };
 
   const dragLeave = (e) => {
-    console.log("Drag Leave", e.target, dragOverItem.current);
     if (dragOverItem.current && dragOverItem.current === e.target) {
       dragOverItem.current.classList.toggle("dragging");
       dragOverItem.current = undefined;
@@ -87,18 +80,15 @@ const KanbanBoard = (props) => {
     e.stopPropagation();
   };
   const dragOver = (e, item) => {
-    // console.log("Drag Over", e.target, item);
     setOverItem(item);
     e.preventDefault();
     e.stopPropagation();
   };
   const dropOnColumn = (e) => {
-    console.log("Drop on Column");
     if (!dragOverItem.current) {
       return;
     }
     dragOverItem.current.classList.toggle("dragging");
-    console.log("Drop event", dragOverItem.current);
     const dropTargetId = dragOverItem.current.getAttribute("data-target");
     moveCardToColumn(
       dragCard,
@@ -107,7 +97,6 @@ const KanbanBoard = (props) => {
     dragOverItem.current = undefined;
   };
   const dropOnCard = (e) => {
-    console.log("DROP ON CARD", overItem, dragCard);
     if (!dragOverItem.current) {
       return;
     }
@@ -136,15 +125,22 @@ const KanbanBoard = (props) => {
     setActiveCard(card);
   }
 
+
+
   return (
     <div className="kbcontainer">
+      <BoardHeader />
       <div className="kbboard">
         {columns.map((column) => {
+            let cardList = cards.filter((card) => card.col == column.id);
+            if (!board.includeEpics) {
+              cardList = cardList.filter((card) => card.type !== "epic");
+            }
           return (
             <Column
               key={column.id}
               column={column}
-              cards={cards.filter((card) => card.col === column.id)}
+              cards={cardList}
               epics={epics}
               onDragStart={(e, card) => dragStart(e, card)}
               onDragEnter={dragEnter}

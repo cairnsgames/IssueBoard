@@ -24,6 +24,7 @@ const BoardProvider = (props) => {
     name: "Kanban Board",
     code: "WEB",
     defaultColumn: 10,
+    includeEpics: true
   });
 
   const [columns, setColumns] = useState([
@@ -67,6 +68,15 @@ const BoardProvider = (props) => {
       color: "white",
     },
     {
+      id: 101,
+      name: "Blue Epic",
+      col: 10,
+      prefix: "Web",
+      type: "epic",
+      backgroundcolor: "blue",
+      color: "white",
+    },
+    {
       id: 3,
       name: "Card 3",
       col: 10,
@@ -76,14 +86,13 @@ const BoardProvider = (props) => {
       color: "red",
       type: "story",
     },
-    { id: 4, name: "Card 4", col: 10, prefix: "MBL", type: "bug", priority: 3 },
+    { id: 4, name: "Card 4", col: 10, prefix: "MBL", type: "bug", priority: 3, parent: 101 },
+    
+    { id: 5, name: "Card Blue", parent: 101, col: 10, prefix: "MBL", type: "bug", priority: 3 },
   ]);
 
   const [activeCard, setActiveCard] = useState();
-
-  useEffect(() => {
-    console.log("Active Card Changes", activeCard);
-  }, [activeCard]);
+  const [activeEpic, setActiveEpic] = useState();
 
   const changeCardOrder = (card1, card2) => {
     setCards((prevcards) => {
@@ -105,11 +114,9 @@ const BoardProvider = (props) => {
   };
 
   const moveCardToColumn = (card, column) => {
-    console.log("Moving card", card, "to column", column);
     setCards(
       cards.map((item) => {
         if (item.id === card.id) {
-          console.log("Moving ", item, { ...item, col: column.id });
           item.col = column.id;
           return { ...item, col: column.id };
         }
@@ -124,6 +131,7 @@ const BoardProvider = (props) => {
       prefix: board.code,
       name: "New Card",
       col: board.defaultColumn,
+      parent: activeEpic?.id,
     };
     setCards([...cards, newCard]);
     return newCard;
@@ -141,7 +149,7 @@ const BoardProvider = (props) => {
   };
 
   const epics = cards.filter((card) => card.type === "epic");
-  console.log("EPICS", epics);
+  const tasks = cards.filter((card) => !activeEpic || card.parent == activeEpic.id || (card.id == activeEpic.id && card.type === "epic"));
 
   //   useEffect(() => {
   //     fetch(process.env.REACT_APP_Board_API + "params.php", {
@@ -155,8 +163,9 @@ const BoardProvider = (props) => {
 
   const contextValue = useMemo(
     () => ({
+      board, setBoard,
       columns,
-      cards,
+      cards: tasks,
       epics,
       setCards,
       changeCardOrder,
@@ -164,9 +173,10 @@ const BoardProvider = (props) => {
       addCard,
       updateCard,
       activeCard,
-      setActiveCard,
+      setActiveCard,activeEpic, setActiveEpic,
     }),
     [
+      board, setBoard, 
       columns,
       cards,
       setCards,
@@ -175,7 +185,7 @@ const BoardProvider = (props) => {
       addCard,
       updateCard,
       activeCard,
-      setActiveCard,
+      setActiveCard, activeEpic, setActiveEpic,
     ]
   );
 

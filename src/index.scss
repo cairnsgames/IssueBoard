@@ -61,3 +61,13 @@ $secondary: rgb(228, 0, 128);
     display: none;
   }
 }
+
+.colorpicker .tooltip-inner {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid black;
+  border-radius: 8px;
+  padding: 5px;
+  font-size: 12px;
+  max-width: 275px;
+}

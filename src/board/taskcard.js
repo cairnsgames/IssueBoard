@@ -13,7 +13,7 @@ import {
 } from "react-bootstrap-icons";
 import Priority from "./priority";
 import { useBoard } from "../provider/useboard";
-import { IssueIcon } from "./utils";
+import { IssueIcon, newShade, colorToRGB } from "./utils";
 
 
 const TaskCard = (props) => {
@@ -29,8 +29,6 @@ const TaskCard = (props) => {
     onEditCard,
   } = props;
   const { id, name, col } = card;
-
-  console.log("Card Epic", card.id, epic?.id, card.parent)
 
   const { updateCard } = useBoard();
 
@@ -72,7 +70,6 @@ const TaskCard = (props) => {
   };
 
   const editCard = (e) => {
-    console.log("Double click", card);
     if (onEditCard) {
       onEditCard(e, card);
     }
@@ -81,6 +78,18 @@ const TaskCard = (props) => {
   const setPriority = (level) => {
     updateCard(card.id, { ...card, priority: level });
   };
+
+  const getBackgroundcolor = () => {
+    if (card.backgroundcolor) { return card.backgroundcolor; }
+    // if (epic?.backgroundcolor) { 
+    //   const rgb = colorToRGB(epic.backgroundcolor);
+    //   console.log("RGB", rgb);
+    //   const bg = newShade(rgb, 50);
+    //   console.log("BG", bg);
+    //   return bg; 
+    // }
+    return "white";
+  }
 
   return (
     <Card
@@ -95,7 +104,7 @@ const TaskCard = (props) => {
       onDrop={drop}
       onDoubleClick={editCard}
       style={{
-        backgroundColor: card.backgroundcolor ?? "white",
+        backgroundColor: getBackgroundcolor(),
         color: card.color ?? "black",
       }}
     >
