@@ -28,21 +28,23 @@ const BoardProvider = (props) => {
   });
 
   const [columns, setColumns] = useState([
-    { id: 10, name: "To Do", backgroundcolor: "lightgrey", color: "black" },
-    { id: 20, name: "Next up", backgroundcolor: "lightgrey", color: "black" },
+    { id: 10, seq: 1, name: "To Do", backgroundcolor: "lightgrey", color: "black" },
+    { id: 20, seq: 2, name: "Next up", backgroundcolor: "lightgrey", color: "black" },
     {
       id: 30,
+      seq: 3, 
       name: "In Progress",
       backgroundcolor: "lightgrey",
       color: "black",
     },
     {
       id: 40,
+      seq: 4, 
       name: "Ready to Release",
       backgroundcolor: "lightgrey",
       color: "black",
     },
-    { id: 50, name: "Done", backgroundcolor: "lightgreen", color: "black" },
+    { id: 50, seq: 5, name: "Done", backgroundcolor: "lightgreen", color: "black" },
   ]);
 
   const [cards, setCards] = useState([
