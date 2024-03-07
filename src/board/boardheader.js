@@ -1,6 +1,6 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
-import { Gear } from "react-bootstrap-icons";
+import Settings from "../settings/settingsmodal";
 
 const BoardHeader = () => {
   const { board, setBoard, epics, activeEpic, setActiveEpic } = useBoard();
@@ -9,9 +9,7 @@ const BoardHeader = () => {
       <Row>
         <Col xs={12} md={6}>
           <h1>
-            <Button variant="light">
-              <Gear size="24" />
-            </Button>{" "}
+            <Settings />
             {board.name}
           </h1>
         </Col>
