@@ -11,7 +11,7 @@ export const useBoard = () => {
   }
   const {
     board, setBoard,
-    columns,
+    columns, setColumns, changeColumnOrder,
     cards, epics,
     setCards,
     changeCardOrder,
@@ -24,7 +24,7 @@ export const useBoard = () => {
 
   return {
     board, setBoard,
-    columns,
+    columns, setColumns, changeColumnOrder,
     cards, epics,
     setCards,
     changeCardOrder,

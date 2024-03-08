@@ -150,6 +150,22 @@ const BoardProvider = (props) => {
     );
   };
 
+  const changeColumnOrder = (dragData, overItem) => {
+    const dragIndex = columns.findIndex((column) => column.id === dragData.id);
+    let overIndex = columns.findIndex((column) => column.id === overItem.id);
+    let newColumns = [...columns];
+    newColumns.splice(dragIndex, 1);
+    if (dragIndex < overIndex) {
+      overIndex--;
+  }
+    newColumns.splice(overIndex, 0, dragData);
+    newColumns = newColumns.map((column, index) => {
+      return {...column, seq: index};
+    });
+    console.log(newColumns);
+    setColumns(newColumns);
+  }
+
   const epics = cards.filter((card) => card.type === "epic");
   const tasks = cards.filter((card) => !activeEpic || card.parent == activeEpic.id || (card.id == activeEpic.id && card.type === "epic"));
 
@@ -166,7 +182,7 @@ const BoardProvider = (props) => {
   const contextValue = useMemo(
     () => ({
       board, setBoard,
-      columns,
+      columns, setColumns, changeColumnOrder,
       cards: tasks,
       epics,
       setCards,
@@ -179,7 +195,7 @@ const BoardProvider = (props) => {
     }),
     [
       board, setBoard, 
-      columns,
+      columns, setColumns, changeColumnOrder,
       cards,
       setCards,
       changeCardOrder,
