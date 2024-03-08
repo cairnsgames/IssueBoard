@@ -8,20 +8,25 @@ import KanbanBoard from "./board/board";
 import { BoardProvider } from "./provider/boardprovider";
 import useLocation from "./hooks/uselocation";
 import Settings from "./settings/settings";
+import Toasts from "./toasts/toasts";
+import { ToastsProvider } from "./provider/toastsprovider";
 
 const App = () => {
   const { hash } = useLocation();
 
   return (
-    <BoardProvider>
-      <Container fluid>
-        <NavBar />
-        {hash === "settings" && <Settings />}
-        {(hash.startsWith("board") || hash === "") && (
-          <KanbanBoard title="Board" />
-        )}
-      </Container>
-    </BoardProvider>
+    <ToastsProvider>
+      <BoardProvider>
+        <Container fluid>
+          <NavBar />
+          {hash === "settings" && <Settings />}
+          {(hash.startsWith("board") || hash === "") && (
+            <KanbanBoard title="Board" />
+          )}
+        </Container>
+        <Toasts />
+      </BoardProvider>
+    </ToastsProvider>
   );
 };
 

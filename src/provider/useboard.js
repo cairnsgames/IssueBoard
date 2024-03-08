@@ -10,8 +10,8 @@ export const useBoard = () => {
     throw new Error("useBoard was used outside of its Provider");
   }
   const {
-    board, setBoard,
-    columns, setColumns, changeColumnOrder,
+    board, setBoard, updateBoard,
+    columns, setColumns, changeColumnOrder, deleteColumn, addColumn, updateColumn,
     cards, epics,
     setCards,
     changeCardOrder,
@@ -23,8 +23,8 @@ export const useBoard = () => {
   } = context;
 
   return {
-    board, setBoard,
-    columns, setColumns, changeColumnOrder,
+    board, setBoard, updateBoard,
+    columns, setColumns, changeColumnOrder, deleteColumn, addColumn, updateColumn,
     cards, epics,
     setCards,
     changeCardOrder,

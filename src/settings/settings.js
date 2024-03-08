@@ -1,12 +1,10 @@
 import { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
-import { Gear } from "react-bootstrap-icons";
-import ColumnsList from "./columnslist";
+import ColumnsList from "./columns/columnslist";
 import { Row, Col, CloseButton } from "react-bootstrap";
+import BoardSettings from "./board/boardsettings";
 
 const Settings = () => {
   const [key, setKey] = useState('home');
@@ -18,7 +16,7 @@ const Settings = () => {
           <h1 className="float-start">
             Settings
           </h1>
-          <CloseButton variant="light" className="float-end mt-3 me-3" onClick={() => (window.location.hash = "")} />
+          <CloseButton className="float-end mt-3 me-3" onClick={() => (window.location.hash = "")} />
         </Col>
       </Row>
     <Tabs
@@ -29,7 +27,7 @@ const Settings = () => {
       variant="pills"
     >
         <Tab eventKey="home" title="Board">
-          <ColumnsList />
+          <BoardSettings />
         </Tab>
         <Tab eventKey="columns" title="Columns">
           <ColumnsList />

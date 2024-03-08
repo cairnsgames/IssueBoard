@@ -1,9 +1,12 @@
 import React from "react";
-import { Bag, Bug, Journal, Stickies, AlignTop } from "react-bootstrap-icons";
+import { Bag, Bug, Journal, Stickies, AlignTop, Asterisk } from "react-bootstrap-icons";
 
 export const IssueIcon = (props) => {
   const { type, size } = props;
   switch (type) {
+    
+    case "all":
+      return <Asterisk size={size} />;
     case "bug":
       return <Bug size={size} color="red" />;
     case "task":

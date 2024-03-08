@@ -121,11 +121,10 @@ const KanbanBoard = (props) => {
       dragOverItem.current = null;
     }, 0);
   };
+
   const editCard = (e, card) => {
     setActiveCard(card);
   }
-
-
 
   return (
     <div className="kbcontainer">

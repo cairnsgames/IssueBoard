@@ -127,7 +127,7 @@ const TaskCard = (props) => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item href="#/action-1" onClick={editCard}>Edit</Dropdown.Item>
+                <Dropdown.Item onClick={editCard}>Edit</Dropdown.Item>
                 <Dropdown.Item href="#/action-2">Something...</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">Close</Dropdown.Item>
 

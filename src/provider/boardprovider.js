@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
+import { useToasts } from "./usetoasts";
 
 /* Format for a card
       id: 1,
@@ -18,6 +19,8 @@ const BoardContext = createContext({ columns: [], items: [] });
 
 const BoardProvider = (props) => {
   const { children } = props;
+
+  const { addToast } = useToasts();
 
   const [board, setBoard] = useState({
     id: 1,
@@ -51,7 +54,7 @@ const BoardProvider = (props) => {
     {
       id: 1,
       name: "Create Change Password Screen",
-      col: 10,
+      col: 30,
       prefix: "Web",
       priority: 1,
       type: "bug",
@@ -63,7 +66,7 @@ const BoardProvider = (props) => {
     {
       id: 100,
       name: "Example Epic",
-      col: 10,
+      col: 20,
       prefix: "Web",
       type: "epic",
       backgroundcolor: "green",
@@ -127,6 +130,15 @@ const BoardProvider = (props) => {
     );
   };
 
+  const updateBoard = (board) => {
+    try {
+      setBoard(board);
+      addToast("Board updated", "Board settings have been updated", "success")
+    } catch (error) {
+      addToast("Error saving Board", error.message, "danger");
+    }
+  }
+
   const addCard = () => {
     const newCard = {
       id: cards.length + 1,
@@ -136,6 +148,7 @@ const BoardProvider = (props) => {
       parent: activeEpic?.id,
     };
     setCards([...cards, newCard]);
+    addToast("Card added", "A new card has been added", "success")
     return newCard;
   };
 
@@ -149,6 +162,17 @@ const BoardProvider = (props) => {
       })
     );
   };
+  const addColumn = (title) => {
+    const newColumn = {
+      id: columns.length + 1,
+      name: title,
+      backgroundcolor: "lightgrey",
+      color: "black",
+    };
+    setColumns([...columns, newColumn]);
+    return newColumn;
+  };
+
 
   const changeColumnOrder = (dragData, overItem) => {
     const dragIndex = columns.findIndex((column) => column.id === dragData.id);
@@ -166,6 +190,29 @@ const BoardProvider = (props) => {
     setColumns(newColumns);
   }
 
+  const deleteColumn = (column) => {
+    console.log("Delete Column", column)
+    const cardsInColumn = cards.filter((card) => card.col === column.id);
+    if (cardsInColumn.length > 0) {
+      throw new Error("You cannot delete a column with cards in it");
+    }
+    setColumns(
+      columns.filter((item) => {
+        return item.id !== column.id;
+      })
+    );
+  }
+  const updateColumn = (column) => {
+    setColumns(
+      columns.map((item) => {
+        if (item.id === column.id) {
+          return column;
+        }
+        return item;
+      })
+    );
+  }
+
   const epics = cards.filter((card) => card.type === "epic");
   const tasks = cards.filter((card) => !activeEpic || card.parent == activeEpic.id || (card.id == activeEpic.id && card.type === "epic"));
 
@@ -181,8 +228,8 @@ const BoardProvider = (props) => {
 
   const contextValue = useMemo(
     () => ({
-      board, setBoard,
-      columns, setColumns, changeColumnOrder,
+      board, setBoard, updateBoard,
+      columns, setColumns, changeColumnOrder, deleteColumn, addColumn, updateColumn,
       cards: tasks,
       epics,
       setCards,
@@ -194,8 +241,8 @@ const BoardProvider = (props) => {
       setActiveCard,activeEpic, setActiveEpic,
     }),
     [
-      board, setBoard, 
-      columns, setColumns, changeColumnOrder,
+      board, setBoard, updateBoard,
+      columns, setColumns, changeColumnOrder, deleteColumn, addColumn, updateColumn,
       cards,
       setCards,
       changeCardOrder,

@@ -17,6 +17,8 @@ const EditTask = (props) => {
   const { card, setCard, close, saveCard } = props;
   const { epics, columns } = useBoard();
 
+  console.log("EditTask", card)
+
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
@@ -58,22 +60,22 @@ const EditTask = (props) => {
                     <Dropdown.Item
                       onClick={() => setCard({ ...card, type: "bug" })}
                     >
-                      <IssueIcon type="bug" />
+                      <IssueIcon type="bug" /> Bug
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => setCard({ ...card, type: "task" })}
                     >
-                      <IssueIcon type="task" />
+                      <IssueIcon type="task" /> Technical Task
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => setCard({ ...card, type: "story" })}
                     >
-                      <IssueIcon type="story" />
+                      <IssueIcon type="story" /> User Story
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => setCard({ ...card, type: "epic" })}
                     >
-                      <IssueIcon type="epic" />
+                      <IssueIcon type="epic" /> Epic
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>

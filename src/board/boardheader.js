@@ -1,6 +1,7 @@
 import { Button, Col, Form, Row } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
 import { Gear } from "react-bootstrap-icons";
+import TypeSelector from "./typeselector";
 
 const BoardHeader = () => {
   const { board, setBoard, epics, activeEpic, setActiveEpic } = useBoard();
@@ -15,7 +16,10 @@ const BoardHeader = () => {
             {board.name}
           </h1>
         </Col>
-        <Col xs={6}>
+        <Col className="mt-2">
+          <TypeSelector />
+        </Col>
+        <Col xs={4}>
           <Form.Select
             className="mt-2"
             value={activeEpic?.id}
