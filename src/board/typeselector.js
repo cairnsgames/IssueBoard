@@ -1,11 +1,11 @@
 import React from "react";
 import { Dropdown } from "react-bootstrap";
-import { IssueIcon } from "./utils";
+import { IssueIcon } from "../utils/icons";
 
 
 const TypeSelector = ({ types, selectedType = "all", onSelect = () => {}}) => {
     return (<Dropdown className="float-start me-2">
-    <Dropdown.Toggle variant="success" id="dropdown-basic">
+    <Dropdown.Toggle variant="outline-dark">
       <IssueIcon type={selectedType} />
     </Dropdown.Toggle>
 

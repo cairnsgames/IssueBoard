@@ -1,20 +1,13 @@
 import React from "react";
-import { Button, Card, Dropdown, Row, Col, Badge } from "react-bootstrap";
+import { Card, Dropdown, Row, Col, Badge } from "react-bootstrap";
 import {
-  Bag,
-  Bug,
   ChevronRight,
   Hash,
-  Icon1CircleFill,
-  Journal,
-  JournalBookmarkFill,
-  Stickies,
   ThreeDots,
 } from "react-bootstrap-icons";
 import Priority from "./priority";
 import { useBoard } from "../provider/useboard";
-import { IssueIcon, newShade, colorToRGB } from "./utils";
-
+import { IssueIcon } from "../utils/icons";
 
 const TaskCard = (props) => {
   const {
@@ -30,7 +23,7 @@ const TaskCard = (props) => {
   } = props;
   const { id, name, col } = card;
 
-  const { updateCard } = useBoard();
+  const { updateCard, columns } = useBoard();
 
   const dragStart = (e) => {
     // e.dataTransfer.setData("card", JSON.stringify(card));
@@ -78,18 +71,23 @@ const TaskCard = (props) => {
   const setPriority = (level) => {
     updateCard(card.id, { ...card, priority: level });
   };
+  const setStatus = (status) => {
+    updateCard(card.id, { ...card, col: status });
+  };
 
   const getBackgroundcolor = () => {
-    if (card.backgroundcolor) { return card.backgroundcolor; }
-    // if (epic?.backgroundcolor) { 
+    if (card.backgroundcolor) {
+      return card.backgroundcolor;
+    }
+    // if (epic?.backgroundcolor) {
     //   const rgb = colorToRGB(epic.backgroundcolor);
     //   console.log("RGB", rgb);
     //   const bg = newShade(rgb, 50);
     //   console.log("BG", bg);
-    //   return bg; 
+    //   return bg;
     // }
     return "white";
-  }
+  };
 
   return (
     <Card
@@ -132,6 +130,33 @@ const TaskCard = (props) => {
                 <Dropdown.Item href="#/action-3">Close</Dropdown.Item>
 
                 <Dropdown.Divider />
+                <Dropdown>
+                  <Dropdown.Toggle
+                    variant="light"
+                    align={"end"}
+                    style={{
+                      width: "100%",
+                      textAlign: "left",
+                    }}
+                  >
+                    <div>
+                      Status{" "}
+                      <ChevronRight
+                        className="mt-1"
+                        style={{ float: "right" }}
+                      />
+                    </div>
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    {columns.map((col) => {
+                      return (
+                        <Dropdown.Item key={col.id}  onClick={() => setStatus(col.id)}>
+                          {col.name}
+                        </Dropdown.Item>
+                      );
+                    })}
+                  </Dropdown.Menu>
+                </Dropdown>
                 <Dropdown>
                   <Dropdown.Toggle
                     variant="light"

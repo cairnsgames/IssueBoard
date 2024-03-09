@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IssueIcon } from "./utils";
+import { IssueIcon } from "../utils/icons";
 import {
   Modal,
   Form,
@@ -10,8 +10,8 @@ import {
   InputGroup,
 } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
-import ColorPicker from "./colorpicker";
-import { getTextColor } from "./utils";
+import ColorPicker from "../components/colorpicker";
+import { getTextColor } from "../utils/color";
 
 const EditTask = (props) => {
   const { card, setCard, close, saveCard } = props;

@@ -27,27 +27,45 @@ const BoardProvider = (props) => {
     name: "Kanban Board",
     code: "WEB",
     defaultColumn: 10,
-    includeEpics: true
+    includeEpics: true,
   });
 
   const [columns, setColumns] = useState([
-    { id: 10, seq: 1, name: "To Do", backgroundcolor: "lightgrey", color: "black" },
-    { id: 20, seq: 2, name: "Next up", backgroundcolor: "lightgrey", color: "black" },
+    {
+      id: 10,
+      seq: 1,
+      name: "To Do",
+      backgroundcolor: "lightgrey",
+      color: "black",
+    },
+    {
+      id: 20,
+      seq: 2,
+      name: "Next up",
+      backgroundcolor: "lightgrey",
+      color: "black",
+    },
     {
       id: 30,
-      seq: 3, 
+      seq: 3,
       name: "In Progress",
       backgroundcolor: "lightgrey",
       color: "black",
     },
     {
       id: 40,
-      seq: 4, 
+      seq: 4,
       name: "Ready to Release",
       backgroundcolor: "lightgrey",
       color: "black",
     },
-    { id: 50, seq: 5, name: "Done", backgroundcolor: "lightgreen", color: "black" },
+    {
+      id: 50,
+      seq: 5,
+      name: "Done",
+      backgroundcolor: "lightgreen",
+      color: "black",
+    },
   ]);
 
   const [cards, setCards] = useState([
@@ -60,9 +78,15 @@ const BoardProvider = (props) => {
       type: "bug",
       parent: 100,
     },
-    { id: 2, name: "Card 2", col: 10, prefix: "Web", type: "task",
-    backgroundcolor: "lightblue",
-    color: "black", },
+    {
+      id: 2,
+      name: "Card 2",
+      col: 10,
+      prefix: "Web",
+      type: "task",
+      backgroundcolor: "lightblue",
+      color: "black",
+    },
     {
       id: 100,
       name: "Example Epic",
@@ -91,13 +115,35 @@ const BoardProvider = (props) => {
       color: "red",
       type: "story",
     },
-    { id: 4, name: "Card 4", col: 10, prefix: "MBL", type: "bug", priority: 3, parent: 101 },
-    
-    { id: 5, name: "Card Blue", parent: 101, col: 10, prefix: "MBL", type: "bug", priority: 3 },
+    {
+      id: 4,
+      name: "Card 4",
+      col: 10,
+      prefix: "MBL",
+      type: "bug",
+      priority: 3,
+      parent: 101,
+    },
+
+    {
+      id: 5,
+      name: "Card Blue",
+      parent: 101,
+      col: 10,
+      prefix: "MBL",
+      type: "bug",
+      priority: 3,
+    },
   ]);
 
   const [activeCard, setActiveCard] = useState();
   const [activeEpic, setActiveEpic] = useState();
+  const [activeSearch, setActiveSearch] = useState([]);
+
+  const [cardAudit, setCardAudit] = useState([]);
+  const [columnAudit, setColumnAudit] = useState([]);
+  const [boardAudit, setBoardAudit] = useState([]);
+  
 
   const changeCardOrder = (card1, card2) => {
     setCards((prevcards) => {
@@ -118,6 +164,20 @@ const BoardProvider = (props) => {
     });
   };
 
+  const addCardAudit = (card, action, message = "", additional) => {
+    setCardAudit([
+      ...cardAudit,
+      {
+        id: card.id,
+        action: action,
+        message: message,
+        date: new Date().toISOString(),
+        after: card,
+        additional: additional
+      },
+    ]);
+  }
+
   const moveCardToColumn = (card, column) => {
     setCards(
       cards.map((item) => {
@@ -128,16 +188,47 @@ const BoardProvider = (props) => {
         return item;
       })
     );
+    
+    addCardAudit(card, "Card changed State to " + column.name);
   };
 
+  const addBoardAudit = (board, action, message = "", addtional) => {
+    setBoardAudit([
+      ...boardAudit,
+      {
+        id: board.id,
+        action: action,
+        message: message,
+        date: new Date().toISOString(),
+        after: board,
+        addtional: addtional
+      },
+    ]);
+  }
+
+  const addColumnAudit = (column, action, message = "", addtional = {}) => {
+    setColumnAudit([
+      ...columnAudit,
+      {
+        id: column.id,
+        action: action,
+        message: message,
+        date: new Date().toISOString(),
+        after: column,
+        addtional: addtional
+      },
+    ]);
+  }
+
   const updateBoard = (board) => {
+    addBoardAudit(board, "Board updated");
     try {
       setBoard(board);
-      addToast("Board updated", "Board settings have been updated", "success")
+      addToast("Board updated", "Board settings have been updated", "success");
     } catch (error) {
       addToast("Error saving Board", error.message, "danger");
     }
-  }
+  };
 
   const addCard = () => {
     const newCard = {
@@ -148,11 +239,13 @@ const BoardProvider = (props) => {
       parent: activeEpic?.id,
     };
     setCards([...cards, newCard]);
-    addToast("Card added", "A new card has been added", "success")
+    addToast("Card added", "A new card has been added", "success");
+    addCardAudit(newCard, "create", "Card added");
     return newCard;
   };
 
   const updateCard = (id, card) => {
+    addCardAudit(card, "update", "Card updated");
     setCards(
       cards.map((item) => {
         if (item.id === id) {
@@ -169,29 +262,31 @@ const BoardProvider = (props) => {
       backgroundcolor: "lightgrey",
       color: "black",
     };
+    
+    addColumnAudit(newColumn, "create", "Column added");
     setColumns([...columns, newColumn]);
     return newColumn;
   };
 
-
   const changeColumnOrder = (dragData, overItem) => {
+    addColumnAudit(dragData, "update", "Column moved to before " + overItem.name, dragItem);
     const dragIndex = columns.findIndex((column) => column.id === dragData.id);
     let overIndex = columns.findIndex((column) => column.id === overItem.id);
     let newColumns = [...columns];
     newColumns.splice(dragIndex, 1);
     if (dragIndex < overIndex) {
       overIndex--;
-  }
+    }
     newColumns.splice(overIndex, 0, dragData);
     newColumns = newColumns.map((column, index) => {
-      return {...column, seq: index};
+      return { ...column, seq: index };
     });
     console.log(newColumns);
     setColumns(newColumns);
-  }
+  };
 
   const deleteColumn = (column) => {
-    console.log("Delete Column", column)
+    console.log("Delete Column", column);
     const cardsInColumn = cards.filter((card) => card.col === column.id);
     if (cardsInColumn.length > 0) {
       throw new Error("You cannot delete a column with cards in it");
@@ -201,8 +296,9 @@ const BoardProvider = (props) => {
         return item.id !== column.id;
       })
     );
-  }
+  };
   const updateColumn = (column) => {
+    addColumnAudit(column, "update", "Column updated");
     setColumns(
       columns.map((item) => {
         if (item.id === column.id) {
@@ -211,10 +307,21 @@ const BoardProvider = (props) => {
         return item;
       })
     );
-  }
+  };
 
   const epics = cards.filter((card) => card.type === "epic");
-  const tasks = cards.filter((card) => !activeEpic || card.parent == activeEpic.id || (card.id == activeEpic.id && card.type === "epic"));
+  const tasks = cards.filter(
+    (card) =>{
+      //for each field in Active Search check if the card matches
+      for (let field in activeSearch) {
+        if (activeSearch[field] !== "" && card[field] !== activeSearch[field]) {
+          return false;
+        }
+      }
+      return !activeEpic ||
+      card.parent == activeEpic.id ||
+      (card.id == activeEpic.id && card.type === "epic")}
+  );
 
   //   useEffect(() => {
   //     fetch(process.env.REACT_APP_Board_API + "params.php", {
@@ -228,8 +335,15 @@ const BoardProvider = (props) => {
 
   const contextValue = useMemo(
     () => ({
-      board, setBoard, updateBoard,
-      columns, setColumns, changeColumnOrder, deleteColumn, addColumn, updateColumn,
+      board,
+      setBoard,
+      updateBoard,
+      columns,
+      setColumns,
+      changeColumnOrder,
+      deleteColumn,
+      addColumn,
+      updateColumn,
       cards: tasks,
       epics,
       setCards,
@@ -238,11 +352,22 @@ const BoardProvider = (props) => {
       addCard,
       updateCard,
       activeCard,
-      setActiveCard,activeEpic, setActiveEpic,
+      setActiveCard,
+      activeEpic,
+      setActiveEpic,
+      activeSearch,
+      setActiveSearch,
     }),
     [
-      board, setBoard, updateBoard,
-      columns, setColumns, changeColumnOrder, deleteColumn, addColumn, updateColumn,
+      board,
+      setBoard,
+      updateBoard,
+      columns,
+      setColumns,
+      changeColumnOrder,
+      deleteColumn,
+      addColumn,
+      updateColumn,
       cards,
       setCards,
       changeCardOrder,
@@ -250,7 +375,11 @@ const BoardProvider = (props) => {
       addCard,
       updateCard,
       activeCard,
-      setActiveCard, activeEpic, setActiveEpic,
+      setActiveCard,
+      activeEpic,
+      setActiveEpic,
+      activeSearch,
+      setActiveSearch,
     ]
   );
 

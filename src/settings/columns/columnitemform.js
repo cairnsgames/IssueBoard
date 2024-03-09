@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button, InputGroup, Row, Col } from "react-bootstrap";
 import { SketchPicker as ColorPicker } from "react-color";
-import { getTextColor } from "../../board/utils";
+import { getTextColor } from "../../utils/color";
 
 const ColumnItemForm = ({ column, setEdit, updateColumn }) => {
   const [newColumnName, setNewColumnName] = useState(column.name);

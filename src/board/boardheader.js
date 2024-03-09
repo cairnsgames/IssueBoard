@@ -4,7 +4,18 @@ import { Gear } from "react-bootstrap-icons";
 import TypeSelector from "./typeselector";
 
 const BoardHeader = () => {
-  const { board, setBoard, epics, activeEpic, setActiveEpic } = useBoard();
+  const { board, epics, activeEpic, setActiveEpic, activeSearch, setActiveSearch } = useBoard();
+
+  const selectCardType = (type) => {
+    if (type === "all") {
+      // remove the type from the search
+      const newSearch = { ...activeSearch };
+      delete newSearch.type;
+      setActiveSearch(newSearch);
+    } else {
+      setActiveSearch({ ...activeSearch, type });
+    }
+  }
   return (
     <div className="board-header">
       <Row>
@@ -17,7 +28,7 @@ const BoardHeader = () => {
           </h1>
         </Col>
         <Col className="mt-2">
-          <TypeSelector />
+          <TypeSelector selectedType={activeSearch.type} onSelect={selectCardType} />
         </Col>
         <Col xs={4}>
           <Form.Select
