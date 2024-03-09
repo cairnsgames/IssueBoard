@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useMemo, useState } from "react";
 import { useToasts } from "./usetoasts";
+import { useAudit } from "./useaudit";
 
 /* Format for a card
       id: 1,
@@ -136,16 +137,15 @@ const BoardProvider = (props) => {
     },
   ]);
 
+  const [user, setUser] = useState({id: 1, username:"William"});
   const [activeCard, setActiveCard] = useState();
   const [activeEpic, setActiveEpic] = useState();
   const [activeSearch, setActiveSearch] = useState([]);
 
-  const [cardAudit, setCardAudit] = useState([]);
-  const [columnAudit, setColumnAudit] = useState([]);
-  const [boardAudit, setBoardAudit] = useState([]);
+  const { addAudit, startTransaction, commitTransaction, rollbackTransaction } = useAudit();
   
-
   const changeCardOrder = (card1, card2) => {
+    const tx = startTransaction("card", "update", "Card order changed", card1, card2);
     setCards((prevcards) => {
       // Find the indexes of the cards
       const index1 = prevcards.findIndex((item) => item.id === card1.id);
@@ -162,23 +162,11 @@ const BoardProvider = (props) => {
 
       return newcards;
     });
+    commitTransaction(tx, card1);
   };
 
-  const addCardAudit = (card, action, message = "", additional) => {
-    setCardAudit([
-      ...cardAudit,
-      {
-        id: card.id,
-        action: action,
-        message: message,
-        date: new Date().toISOString(),
-        after: card,
-        additional: additional
-      },
-    ]);
-  }
-
   const moveCardToColumn = (card, column) => {
+    const tx = startTransaction("card", "update", "Card moved to " + column.name, card, column);
     setCards(
       cards.map((item) => {
         if (item.id === card.id) {
@@ -189,45 +177,18 @@ const BoardProvider = (props) => {
       })
     );
     
-    addCardAudit(card, "Card changed State to " + column.name);
+    commitTransaction(tx, card);
   };
 
-  const addBoardAudit = (board, action, message = "", addtional) => {
-    setBoardAudit([
-      ...boardAudit,
-      {
-        id: board.id,
-        action: action,
-        message: message,
-        date: new Date().toISOString(),
-        after: board,
-        addtional: addtional
-      },
-    ]);
-  }
-
-  const addColumnAudit = (column, action, message = "", addtional = {}) => {
-    setColumnAudit([
-      ...columnAudit,
-      {
-        id: column.id,
-        action: action,
-        message: message,
-        date: new Date().toISOString(),
-        after: column,
-        addtional: addtional
-      },
-    ]);
-  }
-
   const updateBoard = (board) => {
-    addBoardAudit(board, "Board updated");
+    const tx = startTransaction("board", "update", "Board settings updated", board);
     try {
       setBoard(board);
       addToast("Board updated", "Board settings have been updated", "success");
     } catch (error) {
       addToast("Error saving Board", error.message, "danger");
     }
+    commitTransaction(tx, board);
   };
 
   const addCard = () => {
@@ -240,12 +201,12 @@ const BoardProvider = (props) => {
     };
     setCards([...cards, newCard]);
     addToast("Card added", "A new card has been added", "success");
-    addCardAudit(newCard, "create", "Card added");
+    addAudit("card", "create", "Card added", newCard);
     return newCard;
   };
 
   const updateCard = (id, card) => {
-    addCardAudit(card, "update", "Card updated");
+    addAudit("card", "update", "Card updated", card);
     setCards(
       cards.map((item) => {
         if (item.id === id) {
@@ -263,12 +224,13 @@ const BoardProvider = (props) => {
       color: "black",
     };
     
-    addColumnAudit(newColumn, "create", "Column added");
+    addAudit("column", "create", "Column added", newColumn);
     setColumns([...columns, newColumn]);
     return newColumn;
   };
 
   const changeColumnOrder = (dragData, overItem) => {
+    const tx = startTransaction("columns", "update", "Column moved to before " + overItem.name, dragData, overItem);
     addColumnAudit(dragData, "update", "Column moved to before " + overItem.name, dragItem);
     const dragIndex = columns.findIndex((column) => column.id === dragData.id);
     let overIndex = columns.findIndex((column) => column.id === overItem.id);
@@ -282,10 +244,12 @@ const BoardProvider = (props) => {
       return { ...column, seq: index };
     });
     console.log(newColumns);
+    commitTransaction(tx, dragData);
     setColumns(newColumns);
   };
 
   const deleteColumn = (column) => {
+    const tx = startTransaction("columns", "delete", "Column deleted", column);
     console.log("Delete Column", column);
     const cardsInColumn = cards.filter((card) => card.col === column.id);
     if (cardsInColumn.length > 0) {
@@ -296,9 +260,10 @@ const BoardProvider = (props) => {
         return item.id !== column.id;
       })
     );
+    commitTransaction(tx, column);
   };
   const updateColumn = (column) => {
-    addColumnAudit(column, "update", "Column updated");
+    const tx = startTransaction("columns", "update", "Column updated", column);
     setColumns(
       columns.map((item) => {
         if (item.id === column.id) {
@@ -307,6 +272,7 @@ const BoardProvider = (props) => {
         return item;
       })
     );
+    commitTransaction(tx, column);
   };
 
   const epics = cards.filter((card) => card.type === "epic");

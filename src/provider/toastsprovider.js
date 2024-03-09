@@ -9,10 +9,6 @@ const ToastsProvider = (props) => {
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
-    console.log("New Toasts", toasts)
-  }, [toasts]);
-
-  useEffect(() => {
     // Load Toasts
     // fetch(process.env.REACT_APP_Toasts_API + "params.php", {
     //   headers: { "Content-Type": "application/json", "APP_ID": Toasts },
