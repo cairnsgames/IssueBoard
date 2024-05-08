@@ -27,10 +27,10 @@ const BoardHeader = () => {
             {board.name}
           </h1>
         </Col>
-        <Col className="mt-2">
+        <Col xs={2} md={1} className="mt-2">
           <TypeSelector selectedType={activeSearch.type} onSelect={selectCardType} />
         </Col>
-        <Col xs={4}>
+        <Col xs={10} md={5}>
           <Form.Select
             className="mt-2"
             value={activeEpic?.id}

@@ -15,7 +15,7 @@ const App = () => {
 
   return (
     <Providers user={{id: 1, username: "William"}}>
-      <Container fluid>
+      <Container fluid style={{padding: "0px"}}>
         <NavBar />
         {hash === "settings" && <Settings />}
         {(!hash || hash?.startsWith("board") || hash === "") && (
