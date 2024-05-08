@@ -1,13 +1,10 @@
 import React from "react";
 import { Card, Dropdown, Row, Col, Badge } from "react-bootstrap";
-import {
-  ChevronRight,
-  Hash,
-  ThreeDots,
-} from "react-bootstrap-icons";
+import { ChevronRight, Hash, ThreeDots } from "react-bootstrap-icons";
 import Priority from "./priority";
 import { useBoard } from "../provider/useboard";
 import { IssueIcon } from "../utils/icons";
+import HashLink from "../components/hashlink";
 
 const TaskCard = (props) => {
   const {
@@ -108,11 +105,16 @@ const TaskCard = (props) => {
     >
       <Card.Header>
         <Row>
+          <Col xs={1}>
+            <IssueIcon type={card.type} size="14" />
+          </Col>
           <Col>
-            <IssueIcon type={card.type} size="14" /> {card.name}
+            <HashLink href={`#board/card?id=${card.id}`}>
+              {card.name}
+            </HashLink>
           </Col>
           <Col xs={1}>
-            <Dropdown style={{ float: "right" }} align={"end"}>
+            <Dropdown style={{ float: "right", paddingRight: "0" }} align={"end"}>
               <Dropdown.Toggle
                 variant="light"
                 id="dropdown-basic"
@@ -150,7 +152,10 @@ const TaskCard = (props) => {
                   <Dropdown.Menu>
                     {columns.map((col) => {
                       return (
-                        <Dropdown.Item key={col.id}  onClick={() => setStatus(col.id)}>
+                        <Dropdown.Item
+                          key={col.id}
+                          onClick={() => setStatus(col.id)}
+                        >
                           {col.name}
                         </Dropdown.Item>
                       );

@@ -1,10 +1,11 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import TaskCard from "./taskcard";
 import Column from "./column";
 import { Button } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
 import EditTask from "./edittask";
 import BoardHeader from "./boardheader";
+import { useLocation } from "../hooks/uselocation";
 
 /*
 Database
@@ -52,6 +53,22 @@ const KanbanBoard = (props) => {
     addCard, updateCard,
     activeCard, setActiveCard
   } = useBoard();
+  
+  const { hash, param, setHash } = useLocation("board", ["id"]);
+
+  useEffect(() => {
+    console.log("KanbanBoard - card url", hash)
+    if (hash?.includes("/card")) {
+      const id = param("id");
+      console.log("KanbanBoard - card id", hash, id)
+      if (id) {
+        console.log("Find Card", id, "in", cards);
+        setActiveCard(cards.find((card) => card.id === parseInt(id)));
+      }
+    }
+  }, [hash, param, cards]);
+
+
 
   const dragStart = (e, card) => {
     dragItem.current = e.target;
@@ -163,7 +180,7 @@ const KanbanBoard = (props) => {
         Add
       </Button>
 
-      {activeCard && <EditTask card={activeCard} close={()=>setActiveCard()} setCard={setActiveCard} saveCard={updateCard} />}
+      {hash?.includes("/card") && <EditTask card={activeCard} close={()=>{setActiveCard(); setHash("board")}} setCard={setActiveCard} saveCard={updateCard} />}
     </div>
   );
 };

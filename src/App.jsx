@@ -11,14 +11,14 @@ import Settings from "./settings/settings";
 import Toasts from "./toasts/toasts";
 
 const App = () => {
-  const { hash } = useLocation();
+  const { hash } = useLocation("app",[]);
 
   return (
     <Providers user={{id: 1, username: "William"}}>
       <Container fluid>
         <NavBar />
         {hash === "settings" && <Settings />}
-        {(hash.startsWith("board") || hash === "") && (
+        {(!hash || hash?.startsWith("board") || hash === "") && (
           <KanbanBoard title="Board" />
         )}
       </Container>

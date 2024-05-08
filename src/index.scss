@@ -49,6 +49,17 @@ $secondary: rgb(228, 0, 128);
   opacity: 0.5;
 }
 
+
+.hashlink { 
+  display: inline;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
 .card {
   border-color: none;
   .card-header,

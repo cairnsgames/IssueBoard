@@ -17,9 +17,11 @@ const EditTask = (props) => {
   const { card, setCard, close, saveCard } = props;
   const { epics, columns } = useBoard();
 
-  console.log("EditTask", card)
-
   const [validated, setValidated] = useState(false);
+
+  if (!card) {
+    return null;
+  }
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
@@ -112,7 +114,10 @@ const EditTask = (props) => {
             </Form.Group>
             <Form.Group as={Col} md="4" controlId="validationCustom01">
               <Form.Label>Parent</Form.Label>
-              <Form.Select value={card.parent} onChange={(e)=>setCard({...card, parent: e.target.value})}>
+              <Form.Select
+                value={card.parent}
+                onChange={(e) => setCard({ ...card, parent: e.target.value })}
+              >
                 <option value={undefined}>None</option>
                 {epics.map((epic) => {
                   return (
@@ -126,7 +131,10 @@ const EditTask = (props) => {
             </Form.Group>
             <Form.Group as={Col} md="4" controlId="column">
               <Form.Label>Status</Form.Label>
-              <Form.Select value={card.col} onChange={(e)=>setCard({...card, col: e.target.value})}>
+              <Form.Select
+                value={card.col}
+                onChange={(e) => setCard({ ...card, col: e.target.value })}
+              >
                 {columns.map((column) => {
                   return (
                     <option value={column.id} key={column.id}>
@@ -139,7 +147,16 @@ const EditTask = (props) => {
             </Form.Group>
             <Form.Group as={Col} md="4" controlId="validationCustom02">
               <Form.Label>Card Background</Form.Label>
-              <ColorPicker value={card.backgroundcolor ?? "white"} onChange={(val) => setCard({...card, backgroundcolor: val, color: getTextColor(val)})} />
+              <ColorPicker
+                value={card.backgroundcolor ?? "white"}
+                onChange={(val) =>
+                  setCard({
+                    ...card,
+                    backgroundcolor: val,
+                    color: getTextColor(val),
+                  })
+                }
+              />
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col} md="4" controlId="validationCustomUsername">

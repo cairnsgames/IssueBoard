@@ -6,7 +6,7 @@ export const loadURLDetails = (valid) => {
 
   const myURL = new URL(window.location.href);
   if (window.location.hash) {
-    myURL.search = window.location.hash.substr(
+    myURL.search = window.location.hash.substring(
       window.location.hash.indexOf("?")
     );
   }
@@ -26,19 +26,31 @@ export const loadURLDetails = (valid) => {
     pathname: window.location.pathname,
     path: window.location.pathname.split(/\//).filter((x) => x !== ""),
     protocol: window.location.protocol,
-    set: (url) => {},
+    set: (url) => { window.location.url = url;},
+    setHash: (url) => { window.location.hash = url;},
   };
 };
 
-export const useLocation = (valid) => {
-  const [details, setDetails] = useState(loadURLDetails(valid));
-  const [validParams] = useState(valid);
+export const useLocation = (message, validParams) => {
+  console.log("useLocation", message)
+  const [details, setDetails] = useState({});
+  const [valid, setValid] = useState(validParams);
+
+  const setValues = () => {
+    const values = loadURLDetails(valid)
+    setDetails(values);
+    console.log("setValues", values)
+  }
+  useEffect(() => {
+    console.log("Set Start")
+    setValues();
+  }, []);
 
   const popstate = () => {
-    setDetails(loadURLDetails(validParams));
+    setValues();
   }
   const locationchange = () => {
-    setDetails(loadURLDetails(validParams));
+    setValues();
   }
 
   useEffect(() => {
@@ -52,19 +64,20 @@ export const useLocation = (valid) => {
 
   const set = (url) => {
     window.history.pushState(null, "", url);
-    setDetails(loadURLDetails(validParams));
+    setDetails(loadURLDetails(valid));
   };
-
-  useEffect(() => {
-    setDetails(loadURLDetails(validParams));
-  }, [validParams]);
+  const setHash = (newHash) => {
+    console.log("setHash", newHash)
+    window.location.hash = newHash;
+  };
 
   const param = (key) => {
     const item = details.params.find(i => i.key === key);
-    return item.value;
+    return item?.value;
   }
 
-  return { ...details, set, param };
+  console.log("Hash", details.hash)
+  return { params: details.params, hash: details.hash, set, param, setHash };
 };
 
 export default useLocation;
