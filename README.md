@@ -1,4 +1,4 @@
-# Example Kanban Board with Create-MF-App
+# Example Kanban Board 
 
 This repository contains an example React application created with `create-mf-app` that serves as a mockup of JIRA or other Kanban board functionality.
 
