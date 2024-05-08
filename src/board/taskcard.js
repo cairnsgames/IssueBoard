@@ -117,8 +117,8 @@ const TaskCard = (props) => {
             <Dropdown style={{ float: "right", paddingRight: "0" }} align={"end"}>
               <Dropdown.Toggle
                 variant="light"
-                id="dropdown-basic"
                 style={{
+                  paddingTop: "0px",
                   backgroundColor: "rgb(0,0,0,0)",
                   borderColor: "rgb(0,0,0,0)",
                 }}

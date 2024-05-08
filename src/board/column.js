@@ -89,7 +89,7 @@ const Column = (props) => {
           md={3}
           style={{ margin: "0px", padding: "0px", marginRight: "10px" }}
         >
-          <Button size="sm" variant="">
+          <Button size="sm" variant="" style={{paddingTop: "0px"}}>
             <Plus />
           </Button>
         </Col>
