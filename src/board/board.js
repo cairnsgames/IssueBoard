@@ -46,29 +46,27 @@ const KanbanBoard = (props) => {
   const {
     board,
     columns,
-    cards, epics,
+    cards,
+    epics,
     setCards,
     changeCardOrder,
     moveCardToColumn,
-    addCard, updateCard,
-    activeCard, setActiveCard
+    addCard,
+    updateCard,
+    activeCard,
+    setActiveCard,
   } = useBoard();
-  
+
   const { hash, param, setHash } = useLocation("board", ["id"]);
 
   useEffect(() => {
-    console.log("KanbanBoard - card url", hash)
     if (hash?.includes("/card")) {
       const id = param("id");
-      console.log("KanbanBoard - card id", hash, id)
       if (id) {
-        console.log("Find Card", id, "in", cards);
         setActiveCard(cards.find((card) => card.id === parseInt(id)));
       }
     }
   }, [hash, param, cards]);
-
-
 
   const dragStart = (e, card) => {
     dragItem.current = e.target;
@@ -141,17 +139,17 @@ const KanbanBoard = (props) => {
 
   const editCard = (e, card) => {
     setActiveCard(card);
-  }
+  };
 
   return (
     <div className="kbcontainer">
       <BoardHeader />
       <div className="kbboard">
         {columns.map((column) => {
-            let cardList = cards.filter((card) => card.col == column.id);
-            if (!board.includeEpics) {
-              cardList = cardList.filter((card) => card.type !== "epic");
-            }
+          let cardList = cards.filter((card) => card.col == column.id);
+          if (!board.includeEpics) {
+            cardList = cardList.filter((card) => card.type !== "epic");
+          }
           return (
             <Column
               key={column.id}
@@ -171,16 +169,17 @@ const KanbanBoard = (props) => {
         })}
       </div>
 
-      <Button
-        onClick={() => {
-          const newCard = addCard();
-          setActiveCard(newCard);
-        }}
-      >
-        Add
-      </Button>
-
-      {hash?.includes("/card") && <EditTask card={activeCard} close={()=>{setActiveCard(); setHash("board")}} setCard={setActiveCard} saveCard={updateCard} />}
+      {hash?.includes("/card") && (
+        <EditTask
+          card={activeCard}
+          close={() => {
+            setActiveCard();
+            setHash("board");
+          }}
+          setCard={setActiveCard}
+          saveCard={updateCard}
+        />
+      )}
     </div>
   );
 };

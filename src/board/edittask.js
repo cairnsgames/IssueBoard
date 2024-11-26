@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { IssueIcon } from "../utils/icons";
 import {
   Modal,
@@ -8,33 +8,52 @@ import {
   Col,
   Dropdown,
   InputGroup,
+  Spinner,
+  Breadcrumb,
 } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
 import ColorPicker from "../components/colorpicker";
 import { getTextColor } from "../utils/color";
 
 const EditTask = (props) => {
-  const { card, setCard, close, saveCard } = props;
+  console.log("Edit Card", props);
+  const { close, saveCard } = props;
+  const [card, setCard] = useState(props.card);
   const { epics, columns } = useBoard();
+  const formRef = useRef();
+
+  useEffect(() => {
+    console.log("Card updated", card);
+  }, [card]);
 
   const [validated, setValidated] = useState(false);
 
+  useEffect(() => {
+    if (props.card) {
+      setCard(props.card);
+    }
+  }, [props.card]);
+
   if (!card) {
-    return null;
+    console.log("No card to edit");
+    return <Spinner />;
   }
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
+  const handleSave = (event) => {
+    const form = formRef.current;
     const valid = form.checkValidity();
+    console.log("Valid", valid, form);
     if (valid === false) {
       event.preventDefault();
       event.stopPropagation();
+      return false;
     }
 
     setValidated(true);
 
     if (valid) {
       // Call the Provider to update this card to its new values
+      console.log("Update Card", card);
       saveCard(card.id, card);
       close();
     }
@@ -48,14 +67,25 @@ const EditTask = (props) => {
 
   return (
     <Modal size="lg" show={true} onHide={onClose}>
-      <Form noValidate validated={validated} onSubmit={handleSubmit}>
+      <Form noValidate validated={validated} ref={formRef}>
         <Modal.Header closeButton>
           <Modal.Title className="w-100">
+            <Row>
+              <Breadcrumb style={{ fontSize: "12px" }}>
+                <Breadcrumb.Item href="#">{card.prefix}</Breadcrumb.Item>
+                {card.parent && (
+                  <Breadcrumb.Item href={`#board/card?id=${card.parent}`}>
+                    {card.parent ?? "No Epic"}
+                  </Breadcrumb.Item>
+                )}
+                <Breadcrumb.Item active>{card.id}</Breadcrumb.Item>
+              </Breadcrumb>
+            </Row>
             <Row>
               <Col xs={3} sm={3} md={2}>
                 <Dropdown className="float-start me-2">
                   <Dropdown.Toggle variant="success" id="dropdown-basic">
-                    <IssueIcon type={card.type} />
+                    <IssueIcon type={card?.type} />
                   </Dropdown.Toggle>
 
                   <Dropdown.Menu style={{ minWidth: "50px" }}>
@@ -159,59 +189,13 @@ const EditTask = (props) => {
               />
               <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
             </Form.Group>
-            <Form.Group as={Col} md="4" controlId="validationCustomUsername">
-              <Form.Label>Username</Form.Label>
-              <InputGroup hasValidation>
-                <InputGroup.Text id="inputGroupPrepend">@</InputGroup.Text>
-                <Form.Control
-                  type="text"
-                  placeholder="Username"
-                  aria-describedby="inputGroupPrepend"
-                  // required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Please choose a username.
-                </Form.Control.Feedback>
-              </InputGroup>
-            </Form.Group>
           </Row>
-          {/* <Row className="mb-3">
-            <Form.Group as={Col} md="6" controlId="validationCustom03">
-              <Form.Label>City</Form.Label>
-              <Form.Control type="text" placeholder="City" required />
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid city.
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md="3" controlId="validationCustom04">
-              <Form.Label>State</Form.Label>
-              <Form.Control type="text" placeholder="State" required />
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid state.
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col} md="3" controlId="validationCustom05">
-              <Form.Label>Zip</Form.Label>
-              <Form.Control type="text" placeholder="Zip" required />
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid zip.
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row> */}
-          <Form.Group className="mb-3">
-            <Form.Check
-              // required
-              label="Agree to terms and conditions"
-              feedback="You must agree before submitting."
-              feedbackType="invalid"
-            />
-          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={onClose}>
             Close
           </Button>
-          <Button type="submit" variant="primary">
+          <Button variant="primary" onClick={handleSave}>
             Save Changes
           </Button>
         </Modal.Footer>

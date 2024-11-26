@@ -14,7 +14,7 @@ const AuditProvider = (props) => {
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
-    console.log("Audit chnaged", audits)
+    console.log("Audit changed", audits)
   }, [audits]);
 
   const getNextId = () => {

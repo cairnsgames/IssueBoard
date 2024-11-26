@@ -1,10 +1,17 @@
 import React from "react";
 import { Card, Dropdown, Row, Col, Badge } from "react-bootstrap";
-import { ChevronRight, Hash, ThreeDots } from "react-bootstrap-icons";
+import {
+  ChevronRight,
+  Hash,
+  PersonCircle,
+  ThreeDots,
+} from "react-bootstrap-icons";
 import Priority from "./priority";
 import { useBoard } from "../provider/useboard";
 import { IssueIcon } from "../utils/icons";
 import HashLink from "../components/hashlink";
+import Avatar from "react-avatar";
+import CardPerson from "./cardperson";
 
 const TaskCard = (props) => {
   const {
@@ -71,18 +78,14 @@ const TaskCard = (props) => {
   const setStatus = (status) => {
     updateCard(card.id, { ...card, col: status });
   };
+  const setCardAssignee = (card, id) => {
+    updateCard(card.id, { ...card, person: id });
+  }
 
   const getBackgroundcolor = () => {
     if (card.backgroundcolor) {
       return card.backgroundcolor;
     }
-    // if (epic?.backgroundcolor) {
-    //   const rgb = colorToRGB(epic.backgroundcolor);
-    //   console.log("RGB", rgb);
-    //   const bg = newShade(rgb, 50);
-    //   console.log("BG", bg);
-    //   return bg;
-    // }
     return "white";
   };
 
@@ -109,12 +112,13 @@ const TaskCard = (props) => {
             <IssueIcon type={card.type} size="14" />
           </Col>
           <Col>
-            <HashLink href={`#board/card?id=${card.id}`}>
-              {card.name}
-            </HashLink>
+            <HashLink href={`#board/card?id=${card.id}`}>{card.name}</HashLink>
           </Col>
           <Col xs={1}>
-            <Dropdown style={{ float: "right", paddingRight: "0" }} align={"end"}>
+            <Dropdown
+              style={{ float: "right", paddingRight: "0" }}
+              align={"end"}
+            >
               <Dropdown.Toggle
                 variant="light"
                 style={{
@@ -229,7 +233,32 @@ const TaskCard = (props) => {
         >
           <Hash /> {card.prefix}-{card.id}
         </span>
-        <Priority level={card.priority} />
+        <Dropdown style={{float:"right"}}>
+          <Dropdown.Toggle style={{backgroundColor:"transparent", borderColor: "transparent"}}>
+            <Priority level={card.priority} />
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => setPriority(1)}>
+              Priority 1
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setPriority(2)}>
+              Priority 2
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setPriority(3)}>
+              Priority 3
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setPriority(4)}>
+              Priority 4
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setPriority(5)}>
+              Priority 5
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => setPriority(6)}>
+              Priority 6
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+        <CardPerson card={card} id={card.person} onSelect={setCardAssignee} />
       </Card.Footer>
     </Card>
   );

@@ -124,6 +124,7 @@ const BoardProvider = (props) => {
       type: "bug",
       priority: 3,
       parent: 101,
+      person: 10
     },
 
     {
@@ -134,7 +135,13 @@ const BoardProvider = (props) => {
       prefix: "MBL",
       type: "bug",
       priority: 3,
+      person: 1
     },
+  ]);
+
+  const [users, setUsers] = useState([
+    { id: 1, username: "William", avatar: "person1.jpeg" },
+    { id: 10, username: "Peter Cairns", avatar: undefined }
   ]);
 
   const [user, setUser] = useState({id: 1, username:"William"});
@@ -206,6 +213,7 @@ const BoardProvider = (props) => {
   };
 
   const updateCard = (id, card) => {
+    console.log("Update Card", id, card);
     addAudit("card", "update", "Card updated", card);
     setCards(
       cards.map((item) => {
@@ -289,6 +297,10 @@ const BoardProvider = (props) => {
       (card.id == activeEpic.id && card.type === "epic")}
   );
 
+  const getPerson = (id) => {
+    return users.find((user) => user.id === id);
+  }
+
   //   useEffect(() => {
   //     fetch(process.env.REACT_APP_Board_API + "params.php", {
   //       headers: { "Content-Type": "application/json", "APP_ID": Board },
@@ -323,6 +335,7 @@ const BoardProvider = (props) => {
       setActiveEpic,
       activeSearch,
       setActiveSearch,
+      users, getPerson
     }),
     [
       board,
@@ -346,6 +359,7 @@ const BoardProvider = (props) => {
       setActiveEpic,
       activeSearch,
       setActiveSearch,
+      users, getPerson
     ]
   );
 

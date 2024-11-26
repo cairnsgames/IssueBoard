@@ -32,17 +32,14 @@ export const loadURLDetails = (valid) => {
 };
 
 export const useLocation = (message, validParams) => {
-  console.log("useLocation", message)
   const [details, setDetails] = useState({});
   const [valid, setValid] = useState(validParams);
 
   const setValues = () => {
     const values = loadURLDetails(valid)
     setDetails(values);
-    console.log("setValues", values)
   }
   useEffect(() => {
-    console.log("Set Start")
     setValues();
   }, []);
 
@@ -67,7 +64,6 @@ export const useLocation = (message, validParams) => {
     setDetails(loadURLDetails(valid));
   };
   const setHash = (newHash) => {
-    console.log("setHash", newHash)
     window.location.hash = newHash;
   };
 
@@ -76,7 +72,6 @@ export const useLocation = (message, validParams) => {
     return item?.value;
   }
 
-  console.log("Hash", details.hash)
   return { params: details.params, hash: details.hash, set, param, setHash };
 };
 

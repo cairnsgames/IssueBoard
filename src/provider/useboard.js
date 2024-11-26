@@ -19,7 +19,8 @@ export const useBoard = () => {
     addCard,
     updateCard,
     activeCard,
-    setActiveCard, activeEpic, setActiveEpic, activeSearch, setActiveSearch
+    setActiveCard, activeEpic, setActiveEpic, activeSearch, setActiveSearch,
+    users, getPerson
   } = context;
 
   return {
@@ -32,6 +33,7 @@ export const useBoard = () => {
     addCard,
     updateCard,
     activeCard,
-    setActiveCard, activeEpic, setActiveEpic, activeSearch, setActiveSearch
+    setActiveCard, activeEpic, setActiveEpic, activeSearch, setActiveSearch,
+    users, getPerson
   };
 };
