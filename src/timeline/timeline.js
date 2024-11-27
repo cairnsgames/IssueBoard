@@ -39,7 +39,7 @@ const Timeline = () => {
   const mondays = getMondays(earliestStart);
 
   return (
-    <Container className="timeline-container">
+    <Container fluid className="timeline-container">
       <Row>
         <Col>
           <h2>Gantt Chart</h2>
@@ -47,18 +47,18 @@ const Timeline = () => {
             {/* Render Mondays in a horizontal layout */}
             <div className="monday-timeline" style={{ position: 'relative', height: '40px' }}>
               {mondays.map((monday, index) => {
-                const left = (monday.getTime() - earliestStart) / (1000 * 60 * 60 * 24) * dayWidth; // Adjusted left position
+                const left = 1+(monday.getTime() - earliestStart) / (1000 * 60 * 60 * 24) * dayWidth; // Adjusted left position
 
                 return (
                   <div key={index} style={{ position: 'absolute', left: `${left}%` }}>
                     <div className="monday-date">{`${monday.getDate()}/${monday.getMonth() + 1}`}</div>
-                    <div className="vertical-line" style={{ height: '400px', borderLeft: '1px solid lightgrey', position: 'absolute', top: 0 }}></div>
+                    <div className="vertical-line" style={{ height: '400px', borderLeft: '1px solid lightgrey', position: 'absolute', top: "30px" }}></div>
                   </div>
                 );
               })}
             </div>
             {tasks.map((task, index) => {
-              const left = ((task.start.getTime() - earliestStart) / (1000 * 60 * 60 * 24) * dayWidth); // Adjust multiplier for spacing
+              const left = 1+((task.start.getTime() - earliestStart) / (1000 * 60 * 60 * 24) * dayWidth); // Adjust multiplier for spacing
               const width = Math.max(((task.end.getTime() - task.start.getTime()) / (1000 * 60 * 60 * 24) * dayWidth), minTaskWidth); // Ensure minimum width
               const top = (index+1) * (taskHeight + 10); // Calculate top position for stacking
 

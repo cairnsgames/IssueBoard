@@ -5,8 +5,8 @@
 .gantt-chart {
   background-color: #007bff; /* Default color */
   color: white;
-  padding: 15px; /* Increased padding for height */
-  margin: 5px 0; /* Space between tasks */
+  padding: 5px; /* Increased padding for height */
+  margin: 3px 0; /* Space between tasks */
   border-radius: 4px;
   position: relative;
   height: 300px; /* Increased height for the Gantt chart */
@@ -36,5 +36,11 @@
 }
 
 .task-dates {
-  position: relative; /* Changed to relative for better alignment */
+  position: relative; /* Changed to relative for better alignment */;
+}
+
+
+.monday-date {
+  
+  transform: translateX(-50%);
 }
