@@ -1,16 +1,16 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Row } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
 import { Gear } from "react-bootstrap-icons";
 import TypeSelector from "./typeselector";
+import SelectEpic from "./SelectEpic"; // Importing the new component
 
 const BoardHeader = () => {
   const {
     board,
-    epics,
-    activeEpic,
-    setActiveEpic,
     activeSearch,
-    setActiveSearch,addCard, setActiveCard
+    setActiveSearch,
+    addCard,
+    setActiveCard,
   } = useBoard();
 
   const selectCardType = (type) => {
@@ -26,7 +26,7 @@ const BoardHeader = () => {
   return (
     <div className="board-header">
       <Row>
-        <Col xs={12} md={6}>
+        <Col xs={12} lg={6}>
           <h1>
             <Button
               onClick={() => {
@@ -39,13 +39,13 @@ const BoardHeader = () => {
             {board.name}
           </h1>
         </Col>
-        <Col xs={2} md={1} className="mt-2">
+        <Col xs={2} lg={1} className="mt-2 ms-1">
           <TypeSelector
             selectedType={activeSearch.type}
             onSelect={selectCardType}
           />
         </Col>
-        <Col xs={10} md={5}>
+        <Col xs={2} lg={1} className="mt-2">
           <Button
             onClick={() => {
               const newCard = addCard();
@@ -54,36 +54,10 @@ const BoardHeader = () => {
           >
             Add
           </Button>
-          <Form.Select
-            className="mt-2"
-            value={activeEpic?.id}
-            onChange={(e) => {
-              let valueNum = e.target.value ? parseInt(e.target.value) : 0;
-              const findEpic = epics.find((epic) => epic.id === valueNum);
-              setActiveEpic(findEpic);
-            }}
-          >
-            <option value={0}>Show all Cards</option>
-            {epics.map((epic) => {
-              return (
-                <option value={epic.id} key={epic.id}>
-                  {epic.name}
-                </option>
-              );
-            })}
-          </Form.Select>
         </Col>
-        {/* <Col>
-          <Form.Check // prettier-ignore
-            type="checkbox"
-            label="Show Epics"
-            checked={board.includeEpics}
-            onChange={(e) => {
-              console.log("Include Epics Check box changed", e.target.value);
-              setBoard({ ...board, includeEpics: e.target.checked });
-            }}
-          />
-        </Col> */}
+        <Col className="mt-2 me-1">
+          <SelectEpic /> {/* Using the new component without props */}
+        </Col>
       </Row>
     </div>
   );

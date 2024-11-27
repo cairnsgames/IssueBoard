@@ -6,12 +6,15 @@ import {
   PersonCircle,
   ThreeDots,
 } from "react-bootstrap-icons";
+import PriorityDropdown from "./prioritydropdown";
 import Priority from "./priority";
 import { useBoard } from "../provider/useboard";
 import { IssueIcon } from "../utils/icons";
 import HashLink from "../components/hashlink";
 import Avatar from "react-avatar";
 import CardPerson from "./cardperson";
+import StatusDropdown from "./StatusDropdown"; // Importing the new component
+import PriorityQuickSelect from "./PriorityQuickSelect"; // Importing the new component
 
 const TaskCard = (props) => {
   const {
@@ -25,12 +28,9 @@ const TaskCard = (props) => {
     onDrop,
     onEditCard,
   } = props;
-  const { id, name, col } = card;
-
   const { updateCard, columns } = useBoard();
 
   const dragStart = (e) => {
-    // e.dataTransfer.setData("card", JSON.stringify(card));
     if (onDragStart) {
       onDragStart(e, card);
     }
@@ -131,79 +131,13 @@ const TaskCard = (props) => {
               </Dropdown.Toggle>
 
               <Dropdown.Menu>
-                <Dropdown.Item onClick={editCard}>Edit</Dropdown.Item>
+                <Dropdown.Item href={`#board/card?id=${card.id}`}>Edit</Dropdown.Item>
                 <Dropdown.Item href="#/action-2">Something...</Dropdown.Item>
                 <Dropdown.Item href="#/action-3">Close</Dropdown.Item>
 
                 <Dropdown.Divider />
-                <Dropdown>
-                  <Dropdown.Toggle
-                    variant="light"
-                    align={"end"}
-                    style={{
-                      width: "100%",
-                      textAlign: "left",
-                    }}
-                  >
-                    <div>
-                      Status{" "}
-                      <ChevronRight
-                        className="mt-1"
-                        style={{ float: "right" }}
-                      />
-                    </div>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    {columns.map((col) => {
-                      return (
-                        <Dropdown.Item
-                          key={col.id}
-                          onClick={() => setStatus(col.id)}
-                        >
-                          {col.name}
-                        </Dropdown.Item>
-                      );
-                    })}
-                  </Dropdown.Menu>
-                </Dropdown>
-                <Dropdown>
-                  <Dropdown.Toggle
-                    variant="light"
-                    align={"end"}
-                    style={{
-                      width: "100%",
-                      textAlign: "left",
-                    }}
-                  >
-                    <div>
-                      Priority{" "}
-                      <ChevronRight
-                        className="mt-1"
-                        style={{ float: "right" }}
-                      />
-                    </div>
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => setPriority(1)}>
-                      Priority 1
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setPriority(2)}>
-                      Priority 2
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setPriority(3)}>
-                      Priority 3
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setPriority(4)}>
-                      Priority 4
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setPriority(5)}>
-                      Priority 5
-                    </Dropdown.Item>
-                    <Dropdown.Item onClick={() => setPriority(6)}>
-                      Priority 6
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
+                <StatusDropdown columns={columns} setStatus={setStatus} editCard={editCard} /> {/* Using the new component */}
+                <PriorityDropdown currentPriority={card.priority} setPriority={setPriority} />
               </Dropdown.Menu>
             </Dropdown>
           </Col>
@@ -233,31 +167,7 @@ const TaskCard = (props) => {
         >
           <Hash /> {card.prefix}-{card.id}
         </span>
-        <Dropdown style={{float:"right"}}>
-          <Dropdown.Toggle style={{backgroundColor:"transparent", borderColor: "transparent"}}>
-            <Priority level={card.priority} />
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => setPriority(1)}>
-              Priority 1
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setPriority(2)}>
-              Priority 2
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setPriority(3)}>
-              Priority 3
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setPriority(4)}>
-              Priority 4
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setPriority(5)}>
-              Priority 5
-            </Dropdown.Item>
-            <Dropdown.Item onClick={() => setPriority(6)}>
-              Priority 6
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+        <PriorityQuickSelect setPriority={setPriority} card={card} />
         <CardPerson card={card} id={card.person} onSelect={setCardAssignee} />
       </Card.Footer>
     </Card>
