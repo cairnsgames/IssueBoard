@@ -1,8 +1,8 @@
 import { Button, Col, Row } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
 import { Gear } from "react-bootstrap-icons";
-import TypeSelector from "./typeselector";
-import SelectEpic from "./SelectEpic"; // Importing the new component
+import TypeSelector from "../components/typeselector";
+import SelectEpic from "../components/SelectEpic"; // Importing the new component
 
 const BoardHeader = () => {
   const {

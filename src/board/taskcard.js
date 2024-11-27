@@ -6,14 +6,12 @@ import {
   PersonCircle,
   ThreeDots,
 } from "react-bootstrap-icons";
-import PriorityDropdown from "./prioritydropdown";
-import Priority from "./priority";
+import PriorityDropdown from "../components/prioritydropdown";
 import { useBoard } from "../provider/useboard";
 import { IssueIcon } from "../utils/icons";
 import HashLink from "../components/hashlink";
-import Avatar from "react-avatar";
 import CardPerson from "./cardperson";
-import StatusDropdown from "./StatusDropdown"; // Importing the new component
+import StatusDropdown from "../components/StatusDropdown"; // Importing the new component
 import PriorityQuickSelect from "./PriorityQuickSelect"; // Importing the new component
 
 const TaskCard = (props) => {

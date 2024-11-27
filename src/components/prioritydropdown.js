@@ -1,7 +1,7 @@
 import React from "react";
 import { Dropdown } from "react-bootstrap";
 import { ChevronRight } from "react-bootstrap-icons";
-import Priority from "./priority";
+import Priority from "../components/priority";
 
 const PriorityDropdown = ({ currentPriority, setPriority }) => {
   return (

@@ -1,6 +1,6 @@
 import React from "react";
 import { Dropdown } from "react-bootstrap";
-import Priority from "./priority";
+import Priority from "../components/priority";
 
 const PriorityQuickSelect = ({ setPriority, card }) => {
   return (
