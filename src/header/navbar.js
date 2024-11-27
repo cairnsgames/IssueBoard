@@ -12,6 +12,7 @@ function NavBar() {
           <Nav className="me-auto">
             <Nav.Link href="#home">Home</Nav.Link>
             <Nav.Link href="#board">Board</Nav.Link>
+            <Nav.Link href="#timeline">Timeline</Nav.Link>
             <Nav.Link href="#settings">Settings</Nav.Link>
             <NavDropdown title="Settings" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Swimlanes</NavDropdown.Item>

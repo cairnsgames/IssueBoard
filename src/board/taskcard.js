@@ -12,7 +12,7 @@ import { IssueIcon } from "../utils/icons";
 import HashLink from "../components/hashlink";
 import CardPerson from "./cardperson";
 import StatusDropdown from "../components/StatusDropdown"; // Importing the new component
-import PriorityQuickSelect from "./PriorityQuickSelect"; // Importing the new component
+import PriorityQuickSelect from "../components/PriorityQuickSelect"; // Importing the new component
 
 const TaskCard = (props) => {
   const {

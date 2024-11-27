@@ -1,0 +1,40 @@
+.timeline-container {
+  padding: 20px;
+}
+
+.gantt-chart {
+  background-color: #007bff; /* Default color */
+  color: white;
+  padding: 15px; /* Increased padding for height */
+  margin: 5px 0; /* Space between tasks */
+  border-radius: 4px;
+  position: relative;
+  height: 300px; /* Increased height for the Gantt chart */
+  overflow-x: auto; /* Horizontal scroll for overflow */
+}
+
+.gantt-task {
+  position: absolute;
+  border: 1px solid #fff; /* White border for contrast */
+  border-radius: 4px;
+  padding: 10px; /* Increased padding for content */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+  transition: background-color 0.3s; /* Smooth transition for hover effect */
+  height: 40px; /* Increased height for tasks */
+  display: flex; /* Use flexbox for better alignment */
+  align-items: center; /* Center content vertically */
+  overflow: hidden; /* Hide overflow for tasks */
+}
+
+.gantt-task:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+.task-name {
+  position: relative; /* Changed to relative for better alignment */
+  margin-right: 10px; /* Space between name and dates */
+}
+
+.task-dates {
+  position: relative; /* Changed to relative for better alignment */
+}

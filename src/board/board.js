@@ -1,7 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import TaskCard from "./taskcard";
 import Column from "./column";
-import { Button } from "react-bootstrap";
 import { useBoard } from "../provider/useboard";
 import EditTask from "./edittask";
 import BoardHeader from "./boardheader";
